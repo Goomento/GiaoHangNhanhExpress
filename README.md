@@ -15,7 +15,7 @@
 
 ### 3. Open an issue
 
-To open an issue, click [here](https://github.com/GiaoHangNhanhExpress/Base/issues).
+To open an issue, click [here](https://github.com/Goomento/GiaoHangNhanhExpress/issues).
 
 ### 4. Contribution
 
