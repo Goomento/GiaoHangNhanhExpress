@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <ghn_express>
+                <active>0</active>
+                <title>Giao Hang Nhanh Express</title>
+                <shipping_cost />
+                <environment>sandbox</environment>
+                <sandbox_endpoint>https://dev-online-gateway.ghn.vn</sandbox_endpoint>
+                <production_endpoint>https://console.ghn.vn</production_endpoint>
+                <token backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sallowspecific>0</sallowspecific>
+                <specificcountry>VN</specificcountry>
+                <sort_order>10</sort_order>
+                <showmethod>1</showmethod>
+                <model>Goomento\GiaoHangNhanhExpress\Model\Carrier</model>
+            </ghn_express>
+        </carriers>
+    </default>
+</config>

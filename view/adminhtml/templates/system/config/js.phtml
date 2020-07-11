@@ -1,0 +1,125 @@
+<?php
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+
+/**
+ * @var \Goomento\GiaoHangNhanhExpress\Block\Adminhtml\JsConfig $block
+ */
+$sharedApi = $block->getSharedApiUrl();
+?>
+<script id="ghn_render_data">
+    require([
+        'jquery'
+    ], function ($) {
+        "use strict"
+        let execute = function() {
+            let data = {},
+                API = function (url) {
+                    return new Promise((resolve, reject) => {
+                        $.get(url).done((data) => {
+                            data = (data instanceof Array) ? {} : data;
+                            resolve(data);
+                        }).fail(() => {
+                            reject();
+                        });
+                    });
+                },
+                RenderOption = function ($selector, options = {}, value = 0) {
+                    $selector = $($selector); // make sure that's a jQuery object
+                    options[0] = '-';// Add empty value
+                    let html = '';
+                    for (let key in options) {
+                        html += '<option value="' + key + '">' + options[key] + '</option>';
+                    }
+                    $selector.html(html);
+                    setTimeout(() => {$selector.val(value).trigger('change')}, 100);
+                },
+                LoadOptions = function (url, $selector, value) {
+                    return new Promise((resolve) => {
+                        API(url).then((data) => {
+                            RenderOption($selector, data, value);
+                            resolve();
+                        }).catch();
+                    });
+                },
+                getData = function (field) {
+                    let $ele = $selector(field);
+                    if ($ele.length || $ele.val()) {
+                        return  parseInt($ele.val());
+                    }
+
+                    return 0;
+                },
+                $selector = function (field) {
+                    let data = {
+                        'province_id': 'carriers_ghn_express_store_province',
+                        'to_district_id': 'carriers_ghn_express_store_district',
+                        'to_ward_code': 'carriers_ghn_express_store_ward',
+                        'to_station_id': 'carriers_ghn_express_ghn_station',
+                        'store_id': 'carriers_ghn_express_store_id',
+                    };
+                    if ( !$(`#${field}`).length ) {
+                        return $(`#${data[field]}`);
+                    }
+
+                    return $(`#${field}`);
+                }
+            ;
+
+            LoadOptions(
+                "<?=$sharedApi['province']?>",
+                $selector('province_id'),
+                getData('province_id')
+            );
+
+            $selector('province_id').change(function () {
+                let province_id = getData('province_id');
+                if (province_id) {
+                    LoadOptions(
+                        "<?=$sharedApi['district']?>?province_id=" + province_id,
+                        $selector('to_district_id'),
+                        getData('to_district_id')
+                    );
+                }
+            });
+
+            $selector('to_district_id').change(function () {
+                let to_district_id = getData('to_district_id');
+                if (to_district_id) {
+                    LoadOptions(
+                        "<?=$sharedApi['ward']?>?district_id=" + to_district_id,
+                        $selector('to_ward_code'),
+                        getData('to_ward_code')
+                    );
+                }
+            });
+
+            $selector('to_ward_code').change(function () {
+                let to_district_id = getData('to_district_id');
+                let to_ward_code = getData('to_ward_code') || 0;
+                if (to_district_id && to_ward_code) {
+                    LoadOptions(
+                        "<?=$sharedApi['station']?>?district_id=" + to_district_id + '&ward_code=' + to_ward_code,
+                        $selector('to_station_id'),
+                        getData('to_station_id')
+                    );
+                }
+            });
+
+            if ($selector('store_id').length) {
+                LoadOptions(
+                    "<?=$sharedApi['store']?>",
+                    $selector('store_id'),
+                    getData('store_id')
+                );
+            }
+        }
+        $(document).ready(function () {
+            execute();
+        });
+    });
+</script>

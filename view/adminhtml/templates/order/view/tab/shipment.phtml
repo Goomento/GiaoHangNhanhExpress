@@ -1,0 +1,21 @@
+<?php
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+
+/** @var \Goomento\GiaoHangNhanhExpress\Block\Adminhtml\Order\View\Tab\Shipment $block */
+$shipment = \Goomento\Base\Helper\Registry::staticRegistry('ghn_shipment');
+/** @var \Magento\Sales\Model\Order $order */
+$order = \Goomento\Base\Helper\Registry::staticRegistry('current_order');
+?>
+<div>
+    <?= $block->getChildHtml('shipping_information'); ?>
+    <?php if ($order->canShip() && !$shipment) : ?>
+    <?= $block->getChildHtml('ghn_editable'); ?>
+    <?php endif; ?>
+</div>
+
+

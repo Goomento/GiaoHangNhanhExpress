@@ -1,0 +1,82 @@
+<?php
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+
+use Goomento\GiaoHangNhanhExpress\Helper\Config;
+
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \Goomento\GiaoHangNhanhExpress\Api\Data\GhnShipment $shipment */
+$shipment = \Goomento\Base\Helper\Registry::staticRegistry('ghn_shipment');
+/** @var \Magento\Sales\Model\Order $order */
+$order = \Goomento\Base\Helper\Registry::staticRegistry('current_order');
+$submit_url = $block->getUrl(
+    Config::CODE . '/shipment/sync',
+    [
+        'order_id' => $order->getId()
+    ]
+);
+?>
+<fieldset class="fieldset admin__fieldset " id="ghn_shipment_information">
+    <legend class="admin__legend legend">
+        <span><?= __("Information") ?></span>
+    </legend>
+    <br>
+    <table class="admin__table-secondary order-information-table" style="width: 50%;">
+        <tbody>
+            <tr>
+                <td style="width: 50%">Order ID</td>
+                <td><?= $order->getId() ?></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><?= implode(' | ', $order->getShippingAddress()->getStreet()) ?></td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td><?= $order->getShippingAddress()->getCity() ?></td>
+            </tr>
+            <?php if ($shipment): ?>
+            <tr>
+                <td>GHN Order Code</td>
+                <td><a target="_blank" href="<?= \Goomento\GiaoHangNhanhExpress\Helper\GhnObject::getTrackingUrl($shipment->getTracking()) ?>"><?= $shipment->getTracking() ?></a></td>
+            </tr>
+            <tr>
+                <td>Last Sync</td>
+                <td><?= $shipment->getLastSync() ?></td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td style="color: green; font-weight: bold"><?= $shipment->getStatus() ?></td>
+            </tr>
+            <tr>
+                <td>Delivery Time</td>
+                <td><?= $shipment->getExpectedDeliveryTime() ?></td>
+            </tr>
+            <?php if ($fee = $shipment->getResponseData()['total_fee'] ?? 0):?>
+                <tr>
+                    <td>GHN Shipping Fee</td>
+                    <td style="color: #0A246A"><?= number_format($fee, 0) ?> (VND)</td>
+                </tr>
+            <?php endif;?>
+            <?php if ($log = $shipment->getLog()) : ?>
+            <tr>
+                <td colspan="2">Log: <br><?= $log ?></td>
+            </tr>
+            <?php endif; ?>
+            <tr>
+                <td colspan="2">
+                    <form method="post" action="<?= $submit_url ?>">
+                        <?= $block->getBlockHtml('formkey') ?>
+                        <button type="submit"><?= __("Sync Now") ?></button>
+                    </form>
+                </td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+</fieldset>

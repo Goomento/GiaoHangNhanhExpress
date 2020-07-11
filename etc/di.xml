@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Goomento\GiaoHangNhanhExpress\Api\GhnShipmentRepository"
+                type="Goomento\GiaoHangNhanhExpress\Model\GhnShipmentRepository"/>
+    <preference for="Goomento\GiaoHangNhanhExpress\Api\Data\GhnShipment"
+                type="Goomento\GiaoHangNhanhExpress\Model\GhnShipment"/>
+
+    <virtualType name="ghnLogger" type="Goomento\Base\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="const">Goomento\GiaoHangNhanhExpress\Helper\Config::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Goomento\GiaoHangNhanhExpress\Helper\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">ghnLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goomento\GiaoHangNhanhExpress\Block\Adminhtml\JsConfig">
+        <arguments>
+            <argument name="frontendUrl" xsi:type="object">Magento\Framework\Url</argument>
+        </arguments>
+    </type>
+
+    <type name="Goomento\GiaoHangNhanhExpress\Block\Adminhtml\Order\View\Tab\Shipment">
+        <arguments>
+            <argument name="frontendUrl" xsi:type="object">Magento\Framework\Url</argument>
+        </arguments>
+    </type>
+
+    <type name="Goomento\GiaoHangNhanhExpress\Model\Carrier">
+        <arguments>
+            <argument name="logger" xsi:type="object">ghnLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goomento\GiaoHangNhanhExpress\Model\ClientCommandPool">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="province" xsi:type="string">ProvinceRequestCommand</item>
+                <item name="district" xsi:type="string">DistrictRequestCommand</item>
+                <item name="ward" xsi:type="string">WardRequestCommand</item>
+                <item name="station" xsi:type="string">StationRequestCommand</item>
+                <item name="store" xsi:type="string">StoreRequestCommand</item>
+                <item name="order/create" xsi:type="string">OrderCreateRequestCommand</item>
+                <item name="order/sync" xsi:type="string">OrderSyncRequestCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="OrderSyncRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Order\Sync</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="OrderCreateRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Order\Create</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="DistrictRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\District</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+            <argument name="caching" xsi:type="string">DistrictRequestCommand</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WardRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Ward</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+            <argument name="caching" xsi:type="string">WardRequestCommand</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="StationRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Station</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+            <argument name="caching" xsi:type="string">StationRequestCommand</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ProvinceRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Province</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+            <argument name="caching" xsi:type="string">ProvinceRequestCommand</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="StoreRequestCommand" type="Goomento\GiaoHangNhanhExpress\Model\Http\ClientCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Goomento\GiaoHangNhanhExpress\Model\Http\Request\Store</argument>
+            <argument name="client" xsi:type="object">ghnZendClient</argument>
+            <argument name="caching" xsi:type="string">StoreRequestCommand</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="ghnZendClient" type="Goomento\Base\Http\Client\Zend">
+        <arguments>
+            <argument name="logger" xsi:type="object">ghnLogger</argument>
+            <argument name="converter" xsi:type="object">Goomento\Base\Http\Converter\JsonToArray</argument>
+        </arguments>
+    </virtualType>
+
+</config>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="update_ghn_shipment_status" instance="Goomento\GiaoHangNhanhExpress\Console\GhnSyncOrderCron" method="execute">
+            <!-- Every 15 minutes -->
+            <schedule>0,15,30,45 * * * *</schedule>
+        </job>
+    </group>
+</config>

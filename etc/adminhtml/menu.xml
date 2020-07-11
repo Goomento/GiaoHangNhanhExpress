@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Goomento_GiaoHangNhanhExpress::maintext"
+             title="Giao Hang Nhanh Express"
+             module="Goomento_GiaoHangNhanhExpress"
+             sortOrder="2"
+             parent="Goomento_Base::menu"
+             resource="Goomento_GiaoHangNhanhExpress::maintext"/>
+
+        <add id="Goomento_GiaoHangNhanhExpress::config"
+             title="Configuration"
+             module="Goomento_GiaoHangNhanhExpress"
+             sortOrder="1"
+             parent="Goomento_GiaoHangNhanhExpress::maintext"
+             action="adminhtml/system_config/edit/section/carriers"
+             resource="Goomento_GiaoHangNhanhExpress::config"
+             />
+    </menu>
+</config>

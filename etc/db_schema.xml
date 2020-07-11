@@ -1,0 +1,41 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<!--
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+-->
+<table name="ghn_shipment" resource="default" engine="innodb" comment="GHN Shipment">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="false" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Magento Order ID"/>
+    <column xsi:type="varchar" name="expected_delivery_time" length="64" nullable="true" comment="Delivery Time"/>
+    <column xsi:type="varchar" name="order_code" length="32" nullable="true" comment="GHN Order Code"/>
+    <column xsi:type="varchar" name="status" length="32" nullable="true" default="pending" comment="GHN Order Status"/>
+    <column xsi:type="text" name="send_data" nullable="true" comment="Data Sent To GHN"/>
+    <column xsi:type="text" name="response_data" nullable="true" comment="Data Response From GHN"/>
+    <column xsi:type="text" name="log" nullable="true" comment="Data Log From GHN"/>
+    <column xsi:type="datetime" name="last_sync" on_update="false" nullable="true" comment="Last Sync"/>
+
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+        <column name="entity_id"/>
+    </constraint>
+
+    <constraint xsi:type="foreign"
+                referenceId="GHN_SHIPMENT_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                table="ghn_shipment"
+                column="order_id"
+                referenceTable="sales_order"
+                referenceColumn="entity_id"
+                onDelete="NO ACTION"/>
+
+    <index referenceId="GHN_SHIPMENT_ORDER_ID" indexType="btree">
+        <column name="order_id"/>
+    </index>
+    <index referenceId="GHN_SHIPMENT_ORDER_CODE" indexType="btree">
+        <column name="order_code"/>
+    </index>
+</table>
+</schema>

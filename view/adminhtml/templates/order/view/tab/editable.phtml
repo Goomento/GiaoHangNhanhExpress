@@ -1,0 +1,48 @@
+<?php
+/**
+ * @author @haihv433
+ * @copyright Copyright (c) 2020 Goomento (https://store.goomento.com)
+ * @package Goomento_GiaoHangNhanhExpress
+ * @link https://github.com/Goomento/GiaoHangNhanhExpress
+ */
+
+/** @var \Goomento\GiaoHangNhanhExpress\Block\Adminhtml\Order\View\Tab\Editable $block */
+
+use Goomento\Base\Helper\Registry;
+use Goomento\GiaoHangNhanhExpress\Helper\Config;
+
+$order = Registry::staticRegistry('current_order');
+$errorMessage = null;
+
+try {
+    \Goomento\GiaoHangNhanhExpress\Helper\Helper::assertOrderLocateVN($order);
+} catch (\Magento\Framework\Exception\LocalizedException $e) {
+    $errorMessage = $e->getMessage();
+} catch (\Exception $e) {
+    $errorMessage = " ";
+}
+
+
+if (!$errorMessage) :
+$submit_url = $block->getUrl(
+    Config::CODE . '/shipment/create',
+    [
+        'order_id' => $order->getId()
+    ]
+);
+$form_html = $block->getChildHtml('ghn_form');
+    if ($form_html):
+    ?>
+    <form id="send_to_ghn-form" method="post" action="<?= $submit_url ?>" data-mage-init='{"validation": {}}'>
+        <?= $block->getBlockHtml('formkey') ?>
+        <?= $block->getChildHtml('ghn_form'); ?>
+        <button id="send_to_ghn-btn" type="submit"><?= __("Send to GHN") ?></button>
+    </form>
+    <?= $block->getChildHtml('js.config'); ?>
+    <?php endif;?>
+<?php else :?>
+<br>
+<div style="padding: 10px; border: 2px solid red">
+    <?= $errorMessage?>
+</div>
+<?php endif; ?>
